@@ -1,0 +1,25 @@
+<html>
+    <body>
+        <h1>Login Page</h1><br>  
+
+            <form action="/login/menu" method="POST">
+                   
+                User: <input type="text" name="user"><br/>
+                Password: <input type="password" name="psw"><br/>
+                <input type="submit" value="Login"><br/><br/>
+           
+            </form>
+
+            <!-- if there's error or message -->
+            <% if(msg!=undefined) { %>
+
+                <script>
+
+                    alert("<%= msg %>")
+
+                </script>
+                
+            <% } %> 
+
+    </body>
+</html>
