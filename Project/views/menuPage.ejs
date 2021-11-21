@@ -1,0 +1,15 @@
+<html>
+    <body>
+        <h1>Menu Page</h1><br>
+
+            <a href="/menu/search"> Search Movies</a><br><br>
+            <a href="/menu/createMovie"> Create Movies</a><br><br>
+
+            <!-- if user is admin -->
+            <% if(login==true) { %>
+
+                <a href="/menu/edit"> Edit Users</a><br><br>
+                
+            <% } %>
+    </body>
+</html>
