@@ -1,0 +1,49 @@
+<html>
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=0.75">
+        <title>User Data</title>
+    </head>
+    
+    <body style="text-align: center; background-color: #e6ffff;">
+
+        <h1 style="color: #999999;">User Data Page</h1><br>
+
+        <!-- add user to Users file -->
+        <% if(option==1) { %>
+
+            <div style="border-color: #ffb3b3; border-style: groove; width: 400px; margin: auto;"><br>
+                <form action="/menu/edit/userData" method="POST">
+                    
+                    <input type="hidden" name="do" value=1>
+                    <input placeholder="Enter User Name" type="text" name="user" required><br/><br/>
+                    <input placeholder="Enter Password" type="password" name="psw" required><br/><br/>
+                    <input placeholder="Enter Num Of Transactions" type="number" name="number" min="1" required><br/><br/>
+                    Created Date: <input type="date" name="date" required><br/><br/>
+                    <input style="cursor: pointer;" type="submit" value="Save">
+            
+                </form>
+            </div>
+        <% } %>  
+        
+        <!-- update user in Users file -->
+        <% if(option==2) { %>
+
+            <div style="border-color: #ffb3b3; border-style: groove; width: 400px; margin: auto;"><br>
+                <form action="/menu/edit/userData" method="POST">
+
+                    <input type="hidden" name="do" value=2>
+                    <input type="hidden" name="previous" value="<%= data.Username %>">
+                    User: <input type="text" name="user" value="<%= data.Username %>"><br/><br/>
+                    Password: <input type="text" name="psw" value="<%= data.Password %>"><br/><br/>
+                    Num Of Transactions: <input type="number" name="number" min="0" value="<%= data.NumOfTransactions %>"><br/><br/>
+                    Created Date: <input type="date" name="date" value="<%= data.CreatedDate %>"><br/><br/>
+                    <input style="cursor: pointer;" type="submit" value="Update">
+            
+                </form>
+            </div>
+
+        <% } %> 
+        
+    </body>
+</html>

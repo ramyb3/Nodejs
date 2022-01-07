@@ -1,0 +1,29 @@
+<html>
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=0.75">
+        <title><%= movie.name %></title>
+    </head>
+    
+    <body style="text-align: center; background-color: #e6ffff;">
+
+        <h1 style="color: #999999;">Movie Data Page</h1><br>
+        
+        <div style="border-color: #ffb3b3; border-style: groove; width: 400px; margin: auto;"><br>
+
+            <img src= "<%= image %>"><br/><br/>
+            
+            <big>
+               <b> Id:</b> <%= movie.id %> <br/>
+               <b> Name:</b> <%= movie.name %> <br/>
+               <b>Genres:</b> <%= movie.genres %> <br/>
+               <b>Language:</b> <%= movie.language %> <br/><br/>
+            </big>
+
+        </div><br>
+
+        <a href="/menu/search/results"> Back to Search Results Page</a><br><br>
+        <a href="/menu"> Back to Menu Page</a>
+
+    </body>
+</html>
