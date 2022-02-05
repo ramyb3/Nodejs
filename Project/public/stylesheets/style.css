@@ -1,8 +1,24 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+body 
+{
+  text-align: center;
+  background-color: #e6ffff;
 }
 
-a {
-  color: #00B7FF;
+h1
+{
+  color: #999999;
+}
+
+.box
+{
+  border-color: #ffb3b3;
+  border-style: groove;
+  width: 400px; 
+  margin: auto;
+}
+
+.select
+{
+  width: 50%;
+  text-align: center;
 }
