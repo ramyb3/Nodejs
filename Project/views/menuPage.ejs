@@ -1,0 +1,29 @@
+<html>
+
+    <head>
+        <link rel="stylesheet" href="/stylesheets/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=0.75">
+        <title>Menu</title>
+
+    </head>
+    
+    <body>
+
+        <h1>Menu Page</h1><br>
+
+        <big>
+
+            <a href="/menu/search"> Search Movies</a><br><br>
+            <a href="/menu/createMovie"> Create Movies</a><br><br>
+
+            <!-- if user is admin -->
+            <% if(login==true) { %>
+
+                <a href="/menu/edit"> Edit Users</a><br><br>
+                
+            <% } %>
+            
+        </big>
+
+    </body>
+</html>
