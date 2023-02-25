@@ -1,8 +1,8 @@
-# README
+# Managing Movies Data:
 
-Create a new web service with the following values:
+just run:
 
-- Build Command: `yarn`
-- Start Command: `node app.js`
+### `npm start`
 
-That's it! Your web service will be live on your Render URL as soon as the build finishes.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
