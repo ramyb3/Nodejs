@@ -1,0 +1,20 @@
+body {
+  text-align: center;
+  background-color: #e6ffff;
+}
+
+h1 {
+  color: #999999;
+}
+
+.box {
+  border-color: #ffb3b3;
+  border-style: groove;
+  width: 400px;
+  margin: auto;
+}
+
+.select {
+  width: 50%;
+  text-align: center;
+}

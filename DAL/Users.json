@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "Username": "Admin",
+      "Password": "a",
+      "CreatedDate": "2021-09-20",
+      "NumOfTransactions": ""
+    },
+    {
+      "Username": "abc",
+      "Password": "ac",
+      "CreatedDate": "2021-10-05",
+      "NumOfTransactions": "0"
+    },
+    {
+      "Username": "ee",
+      "Password": "adaas",
+      "CreatedDate": "2021-10-04",
+      "NumOfTransactions": 0
+    },
+    {
+      "Username": "wqqq",
+      "Password": "ete",
+      "CreatedDate": "2021-09-28",
+      "NumOfTransactions": 10
+    }
+  ]
+}
