@@ -1,4 +1,4 @@
-# Managing Movies Data:
+# Managing Movies Data
 
 just run:
 
