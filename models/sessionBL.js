@@ -19,16 +19,16 @@ const empty = async function (name) {
   let data;
 
   if (session.length == 1) {
-    data = session.find((x) => x.name == name);
+    data = session.find((user) => user.name == name);
 
     if (data) {
       await jsonDAL.write([], "session");
     }
   } else {
-    data = session.find((x) => x.name == name);
+    data = session.find((user) => user.name == name);
 
     if (data) {
-      let array = session.filter((x) => x.name != data.name);
+      let array = session.filter((user) => user.name != data.name);
       await jsonDAL.write(array, "session");
     }
   }
@@ -42,7 +42,7 @@ const update = async function (obj) {
 
   if (obj.previous == obj.user && Number(obj.number) == 0) {
     // check if need to update credits to 0 or not
-    data = session.find((x) => x.name == obj.user);
+    data = session.find((user) => user.name == obj.user);
 
     // update credits to 0
     if (!data) {
@@ -54,7 +54,7 @@ const update = async function (obj) {
   } else if (obj.previous != obj.user && Number(obj.number) == 0) {
     // only update name
     if (session.length == 1) {
-      data = session.find((x) => x.name == obj.previous);
+      data = session.find((user) => user.name == obj.previous);
 
       if (data) {
         await jsonDAL.write([{ name: obj.user, time: data.time }], "session");
@@ -62,10 +62,10 @@ const update = async function (obj) {
         sessions({ name: obj.user, time });
       }
     } else {
-      data = session.find((x) => x.name == obj.previous);
+      data = session.find((user) => user.name == obj.previous);
 
       if (data) {
-        let array = session.filter((x) => x.name != data.name);
+        let array = session.filter((user) => user.name != data.name);
         data.name = obj.user;
         array.push(data);
 

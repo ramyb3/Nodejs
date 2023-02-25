@@ -4,47 +4,37 @@ const jsonDAL = require("../DAL/jsonDAL");
 exports.search = async function (obj) {
   const movie = await jsonDAL.read("NewMovies");
   const rest = await restDAL.getMovies();
-  let id = [],
-    id1,
-    id2,
-    id3;
+  const arr1 = name(movie, rest, obj);
+  const arr2 = language(movie, rest, obj);
+  const arr3 = genre(movie, rest, obj);
+  let arr = [];
 
-  // 7 cases of search
-
+  // there are 7 cases of search
   if (obj.name != "" && obj.lng != "" && obj.genres) {
-    id1 = name(movie, rest, obj);
-    id2 = language(movie, rest, obj);
-    id3 = genre(movie, rest, obj);
-
-    id = id1.filter((x) => id2.includes(x) && id3.includes(x)); // intersection between 3 searches
+    arr = removeDuplicates(removeDuplicates(arr1, arr2), arr3);
   } else if (obj.name != "" && obj.lng != "" && !obj.genres) {
-    id1 = name(movie, rest, obj);
-    id2 = language(movie, rest, obj);
-
-    id = id1.filter((x) => id2.includes(x)); // intersection between 2 searches
+    arr = removeDuplicates(arr1, arr2);
   } else if (obj.name != "" && obj.lng == "" && obj.genres) {
-    id1 = name(movie, rest, obj);
-    id2 = genre(movie, rest, obj);
-
-    id = id1.filter((x) => id2.includes(x)); // intersection between 2 searches
+    arr = removeDuplicates(arr1, arr3);
   } else if (obj.name == "" && obj.lng != "" && obj.genres) {
-    id1 = language(movie, rest, obj);
-    id2 = genre(movie, rest, obj);
-
-    id = id1.filter((x) => id2.includes(x)); // intersection between 2 searches
+    arr = removeDuplicates(arr2, arr3);
   } else if (obj.name != "" && obj.lng == "" && !obj.genres) {
-    id = name(movie, rest, obj);
+    arr = arr1;
   } else if (obj.name == "" && obj.lng != "" && !obj.genres) {
-    id = language(movie, rest, obj);
+    arr = arr2;
   } else if (obj.name == "" && obj.lng == "" && obj.genres) {
-    id = genre(movie, rest, obj);
+    arr = arr3;
   }
 
-  return id;
+  return arr;
 };
 
+function removeDuplicates(arr1, arr2) {
+  return arr1.filter((data) => arr2.includes(data));
+}
+
 function name(movie, rest, obj) {
-  let arr = rest.map((x) => x.name);
+  let arr = rest.map((data) => data.name);
   rest = [];
 
   for (let i = 0; i < arr.length; i++) {
@@ -57,7 +47,7 @@ function name(movie, rest, obj) {
 
   // check if file NewMovies not empty
   if (movie.length != 0) {
-    arr = movie.movies.map((x) => x.name);
+    arr = movie.movies.map((data) => data.name);
 
     for (let i = 0; i < arr.length; i++) {
       //check all letters
@@ -71,14 +61,14 @@ function name(movie, rest, obj) {
 }
 
 function language(movie, rest, obj) {
-  let arr = rest.filter((x) => x.language == obj.lng);
+  let arr = rest.filter((data) => data.language == obj.lng);
   rest = [];
-  rest.push(arr.map((x) => x.id));
+  rest.push(arr.map((data) => data.id));
 
   // check if file newMovies not empty
   if (movie.length != 0) {
-    arr = movie.movies.filter((x) => x.language == obj.lng);
-    rest.push(arr.map((x) => x.id));
+    arr = movie.movies.filter((data) => data.language == obj.lng);
+    rest.push(arr.map((data) => data.id));
   }
 
   return rest.flat(); // puting all sub-array in the main array
@@ -86,12 +76,12 @@ function language(movie, rest, obj) {
 
 function genre(movie, rest, obj) {
   let movieGenre = 0; // min length of NewMovies file
-  const restGenre = rest.map((x) => x.genres);
+  const restGenre = rest.map((data) => data.genres);
   rest = [];
 
   // check if file NewMovies not empty
   if (movie.length != 0) {
-    movieGenre = movie.movies.map((x) => x.genres);
+    movieGenre = movie.movies.map((data) => data.genres);
   }
 
   // if there is more than one genre

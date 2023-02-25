@@ -21,7 +21,7 @@ router.get("/", async function (req, res, next) {
     if (!req.session.admin) {
       let user = await usersBL.checkUser(req.session.user);
       user.NumOfTransactions = req.session.credits;
-      await usersBL.sessionUser(user);
+      await usersBL.updateUser(user, true);
     }
 
     // check if this user ended his credits for today
@@ -79,7 +79,7 @@ router.post("/menu", async function (req, res, next) {
       let user = await usersBL.checkUser(login[1]);
       user.NumOfTransactions = 10;
 
-      await usersBL.sessionUser(user);
+      await usersBL.updateUser(user, true);
       await sessionBL.empty(login[1]); // delete banned user from session file
 
       req.session.credits = await usersBL.credits(login[1]);
@@ -199,7 +199,7 @@ router.post("/menu/edit/userData", async function (req, res, next) {
   if (req.session.authenticated && req.session.admin) {
     // update
     if (req.body.do == 2) {
-      await usersBL.updateUser(req.body);
+      await usersBL.updateUser(req.body, false);
       await sessionBL.update(req.body); // update user in session file
     }
 

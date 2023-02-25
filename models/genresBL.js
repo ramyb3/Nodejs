@@ -4,15 +4,15 @@ const jsonDAL = require("../DAL/jsonDAL");
 exports.genre = async function (obj, data) {
   const movie = await jsonDAL.read("NewMovies");
   const rest = await restDAL.getMovies();
-  const restGenre = rest.map((x) => x.genres);
-  const dataId = data.map((x) => x.id);
+  const restGenre = rest.map((movieData) => movieData.genres);
+  const dataId = data.map((movieData) => movieData.id);
   const names = [],
     id = [];
   let movieGenre = 0; // min length of NewMovies file
 
   // check if file NewMovies not empty
   if (movie.length != 0) {
-    movieGenre = movie.movies.map((x) => x.genres);
+    movieGenre = movie.movies.map((movieData) => movieData.genres);
   }
 
   for (let k = 0; k < obj.length; k++) {
@@ -83,7 +83,7 @@ exports.genre = async function (obj, data) {
           if (id[i][k] != dataId[j]) {
             arr.push(
               (id[i][k] < 21 ? rest : movie.movies).find(
-                (x) => x.id == id[i][k]
+                (movieData) => movieData.id == id[i][k]
               )
             );
           }
