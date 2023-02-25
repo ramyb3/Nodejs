@@ -6,11 +6,8 @@ exports.genre = async function (obj, data) {
   const rest = await restDAL.getMovies();
   const restGenre = rest.map((x) => x.genres);
   const dataId = data.map((x) => x.id);
-  const names = [];
-  const id = [];
-  let temp;
-
-  let check; //boolean paramter that returns true/false if the genre exist in the movie data
+  const names = [],
+    id = [];
   let movieGenre = 0; // min length of NewMovies file
 
   // check if file NewMovies not empty
@@ -19,13 +16,12 @@ exports.genre = async function (obj, data) {
   }
 
   for (let k = 0; k < obj.length; k++) {
-    temp = [];
+    let check = false; //checks if the genre exist in the movie data
+    const arr = [];
 
     // if there is more than one genre
     if (Array.isArray(obj[k])) {
       for (let j = 0; j < restGenre.length; j++) {
-        check = false;
-
         for (let i = 0; i < obj[k].length; i++) {
           check = restGenre[j].includes(obj[k][i]);
 
@@ -35,7 +31,7 @@ exports.genre = async function (obj, data) {
 
           //because there isn't 17th movie, I improvised a bit
           if (i == obj[k].length - 1 && check) {
-            temp.push(j + (j < 16 ? 1 : 2));
+            arr.push(j + (j < 16 ? 1 : 2));
           }
         }
       }
@@ -43,17 +39,14 @@ exports.genre = async function (obj, data) {
       // check if file NewMovies not empty
       if (movie.length != 0) {
         for (let j = 0; j < movieGenre.length; j++) {
-          check = false;
-
           for (i = 0; i < obj[k].length; i++) {
             check = movieGenre[j].includes(obj[k][i]);
 
             if (!check) {
               break;
             }
-
             if (i == obj[k].length - 1 && check) {
-              temp.push(j + 21); // file NewMovies start with id-21
+              arr.push(j + 21); // file NewMovies start with id-21
             }
           }
         }
@@ -63,7 +56,7 @@ exports.genre = async function (obj, data) {
       for (let i = 0; i < restGenre.length; i++) {
         //because there isn't 17th movie, I improvised a bit
         if (restGenre[i].includes(obj[k])) {
-          temp.push(i + (i < 16 ? 1 : 2));
+          arr.push(i + (i < 16 ? 1 : 2));
         }
       }
 
@@ -71,24 +64,24 @@ exports.genre = async function (obj, data) {
       if (movie.length != 0) {
         for (let i = 0; i < movieGenre.length; i++) {
           if (movieGenre[i].includes(obj[k])) {
-            temp.push(i + 21); // file NewMovies start with id-21
+            arr.push(i + 21); // file NewMovies start with id-21
           }
         }
       }
     }
 
-    id.push(temp);
+    id.push(arr);
   }
 
   for (let i = 0; i < id.length; i++) {
     for (let j = 0; j < data.length; j++) {
-      temp = [];
+      const arr = [];
 
       if (id[i].length > 1 && id[i].includes(dataId[j]) && i == j) {
         for (let k = 0; k < id[i].length; k++) {
           // get movies from REST API or from NewMovies file
           if (id[i][k] != dataId[j]) {
-            temp.push(
+            arr.push(
               (id[i][k] < 21 ? rest : movie.movies).find(
                 (x) => x.id == id[i][k]
               )
@@ -96,8 +89,8 @@ exports.genre = async function (obj, data) {
           }
         }
       }
-      if (temp.length > 0) {
-        names.push({ id: dataId[j], data: temp });
+      if (arr.length > 0) {
+        names.push({ id: dataId[j], data: arr });
       }
       if (id[i].length == 1 && id[i] == dataId[j]) {
         names.push({
