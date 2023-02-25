@@ -2,7 +2,7 @@ const restDAL = require("../DAL/restDAL");
 const jsonDAL = require("../DAL/jsonDAL");
 
 exports.result = async function (obj) {
-  const movie = await jsonDAL.getMovies();
+  const movie = await jsonDAL.read("NewMovies");
   const rest = await restDAL.getMovies();
   let data = [],
     genre = [];

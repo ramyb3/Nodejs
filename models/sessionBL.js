@@ -2,41 +2,41 @@ const jsonDAL = require("../DAL/jsonDAL");
 
 //add banned user to session file
 const sessions = async function (obj) {
-  const session = await jsonDAL.read();
+  const session = await jsonDAL.read("session");
 
   // in the beginning of the project need to write "[]" in session file
   if (session.length == 0) {
-    await jsonDAL.write([obj]);
+    await jsonDAL.write([obj], "session");
   } else {
     session.push(obj);
-    await jsonDAL.write(session);
+    await jsonDAL.write(session, "session");
   }
 };
 
 //delete banned user from session file
 const empty = async function (name) {
-  const session = await jsonDAL.read();
+  const session = await jsonDAL.read("session");
   let data;
 
   if (session.length == 1) {
     data = session.find((x) => x.name == name);
 
     if (data) {
-      await jsonDAL.write([]);
+      await jsonDAL.write([], "session");
     }
   } else {
     data = session.find((x) => x.name == name);
 
     if (data) {
       let array = session.filter((x) => x.name != data.name);
-      await jsonDAL.write(array);
+      await jsonDAL.write(array, "session");
     }
   }
 };
 
 //update banned user in session file
 const update = async function (obj) {
-  const session = await jsonDAL.read();
+  const session = await jsonDAL.read("session");
   const time = new Date(Date.now());
   let data;
 
@@ -57,7 +57,7 @@ const update = async function (obj) {
       data = session.find((x) => x.name == obj.previous);
 
       if (data) {
-        await jsonDAL.write([{ name: obj.user, time: data.time }]);
+        await jsonDAL.write([{ name: obj.user, time: data.time }], "session");
       } else {
         sessions({ name: obj.user, time });
       }
@@ -69,7 +69,7 @@ const update = async function (obj) {
         data.name = obj.user;
         array.push(data);
 
-        await jsonDAL.write(array);
+        await jsonDAL.write(array, "session");
       } else {
         sessions({ name: obj.user, time });
       }

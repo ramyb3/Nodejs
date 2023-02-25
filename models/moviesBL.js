@@ -2,7 +2,7 @@ const restDAL = require("../DAL/restDAL");
 const jsonDAL = require("../DAL/jsonDAL");
 
 exports.movies = async function (obj) {
-  const movie = await jsonDAL.getMovies();
+  const movie = await jsonDAL.read("NewMovies");
   let id, data;
 
   // in the beginning of the project need to write "[]" in NewMovies file
@@ -18,10 +18,10 @@ exports.movies = async function (obj) {
 
   if (movie.length == 0) {
     data = { movies: [obj] };
-    await jsonDAL.saveMovie(data);
   } else {
     movie.movies.push(obj);
     data = { movies: movie.movies };
-    await jsonDAL.saveMovie(data);
   }
+
+  await jsonDAL.write(data, "NewMovies");
 };

@@ -1,7 +1,7 @@
 const jsonDAL = require("../DAL/jsonDAL");
 
 exports.login = async function (obj) {
-  let data = await jsonDAL.getUsers();
+  let data = await jsonDAL.read("Users");
 
   //get user
   data = data.users.find(

@@ -69,7 +69,7 @@ router.post("/menu", async function (req, res, next) {
 
   // user with no credits
   if (login[0] == 3) {
-    const users = await jsonDAL.read();
+    const users = await jsonDAL.read("session");
     const banned = users.find((user) => user.name == login[1]);
     const sessioEnd = new Date(Date.parse(banned.time));
     const newSession = new Date(Date.now()); // get actual time
@@ -255,7 +255,7 @@ router.post("/menu/search/results", async function (req, res, next) {
 
     // if there's results to the search
     if (data.length > 0) {
-      jsonMovie = await jsonDAL.getMovies();
+      jsonMovie = await jsonDAL.read("NewMovies");
       restMovie = await restDAL.getMovies();
       result = await resultsBL.result(data);
       names = await genresBL.genre(result[1], result[0]);

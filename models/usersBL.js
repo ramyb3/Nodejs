@@ -2,20 +2,20 @@ const jsonDAL = require("../DAL/jsonDAL");
 
 // get all users from Users file
 const users = async function () {
-  const data = await jsonDAL.getUsers();
+  const data = await jsonDAL.read("Users");
   return data.users;
 };
 
 // get user from Users file
 const checkUser = async function (obj) {
-  let data = await jsonDAL.getUsers();
+  let data = await jsonDAL.read("Users");
   data = data.users.find((x) => x.Username == obj);
   return data;
 };
 
 // add user to Users file
 const addUser = async function (obj) {
-  const data = await jsonDAL.getUsers();
+  const data = await jsonDAL.read("Users");
 
   const user = {
     Username: obj.user,
@@ -25,12 +25,12 @@ const addUser = async function (obj) {
   };
 
   data.users.push(user);
-  await jsonDAL.saveUsers(data);
+  await jsonDAL.write(data, "Users");
 };
 
 // update user in Users file
 const updateUser = async function (obj) {
-  let usersArr = await jsonDAL.getUsers();
+  let usersArr = await jsonDAL.read("Users");
   const data = usersArr.users.find((x) => x.Username == obj.previous);
   const users = usersArr.users.filter((x) => x.Username != data.Username);
 
@@ -43,15 +43,15 @@ const updateUser = async function (obj) {
 
   usersArr = { users };
   usersArr.users.push(user);
-  await jsonDAL.saveUsers(usersArr);
+  await jsonDAL.write(usersArr, "Users");
 };
 
 // delete user from Users file
 const deleteUser = async function (obj) {
-  const usersArr = await jsonDAL.getUsers();
+  const usersArr = await jsonDAL.read("Users");
   const data = usersArr.users.find((x) => x.Username == obj);
   const users = usersArr.users.filter((x) => x.Username != data.Username);
-  await jsonDAL.saveUsers({ users });
+  await jsonDAL.write({ users }, "Users");
 };
 
 // get user's credits from Users file
@@ -63,7 +63,7 @@ const credits = async function (obj) {
 
 // save user to Users file
 const sessionUser = async function (obj) {
-  let usersArr = await jsonDAL.getUsers();
+  let usersArr = await jsonDAL.read("Users");
   const data = usersArr.users.find((x) => x.Username == obj.Username);
   const users = usersArr.users.filter((x) => x.Username != data.Username);
 
@@ -76,7 +76,7 @@ const sessionUser = async function (obj) {
 
   usersArr = { users };
   usersArr.users.push(user);
-  await jsonDAL.saveUsers(usersArr);
+  await jsonDAL.write(usersArr, "Users");
 };
 
 module.exports = {
