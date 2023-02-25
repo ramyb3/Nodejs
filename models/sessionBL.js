@@ -1,100 +1,80 @@
 const jsonDAL = require("../DAL/jsonDAL");
 
-const sessions = async function (
-  obj //add banned user to session file
-) {
-  let session = await jsonDAL.read();
+//add banned user to session file
+const sessions = async function (obj) {
+  const session = await jsonDAL.read();
 
+  // in the beginning of the project need to write "[]" in session file
   if (session.length == 0) {
-    // in the beginning of the project need to write "[]" in session file
     await jsonDAL.write([obj]);
   } else {
     session.push(obj);
-
     await jsonDAL.write(session);
   }
 };
 
-const empty = async function (
-  name //delete banned user from session file
-) {
-  let session = await jsonDAL.read();
-
+//delete banned user from session file
+const empty = async function (name) {
+  const session = await jsonDAL.read();
   let data;
 
   if (session.length == 1) {
     data = session.find((x) => x.name == name);
 
-    if (data != undefined) {
+    if (data) {
       await jsonDAL.write([]);
     }
   } else {
     data = session.find((x) => x.name == name);
 
-    if (data != undefined) {
+    if (data) {
       let array = session.filter((x) => x.name != data.name);
-
       await jsonDAL.write(array);
     }
   }
 };
 
-const update = async function (
-  obj //update banned user in session file
-) {
-  let session = await jsonDAL.read();
-
+//update banned user in session file
+const update = async function (obj) {
+  const session = await jsonDAL.read();
+  const time = new Date(Date.now());
   let data;
-  let func = false; // check cases
-  let time = new Date(Date.now());
 
   if (obj.previous == obj.user && Number(obj.number) == 0) {
     // check if need to update credits to 0 or not
     data = session.find((x) => x.name == obj.user);
 
-    if (data == undefined) {
-      // update credits to 0
-      sessions({ name: obj.user, time: time });
+    // update credits to 0
+    if (!data) {
+      sessions({ name: obj.user, time });
     }
-
-    func = true;
-  }
-
-  if (obj.previous == obj.user && Number(obj.number) > 0 && func == false) {
+  } else if (obj.previous == obj.user && Number(obj.number) > 0) {
     // only update credits
     empty(obj.user);
-
-    func = true;
-  }
-
-  if (obj.previous != obj.user && Number(obj.number) == 0 && func == false) {
+  } else if (obj.previous != obj.user && Number(obj.number) == 0) {
     // only update name
     if (session.length == 1) {
       data = session.find((x) => x.name == obj.previous);
 
-      if (data != undefined) {
+      if (data) {
         await jsonDAL.write([{ name: obj.user, time: data.time }]);
       } else {
-        sessions({ name: obj.user, time: time });
+        sessions({ name: obj.user, time });
       }
     } else {
       data = session.find((x) => x.name == obj.previous);
 
-      if (data != undefined) {
+      if (data) {
         let array = session.filter((x) => x.name != data.name);
         data.name = obj.user;
         array.push(data);
 
         await jsonDAL.write(array);
       } else {
-        sessions({ name: obj.user, time: time });
+        sessions({ name: obj.user, time });
       }
     }
-
-    func = true;
-  }
-
-  if (obj.previous != obj.user && Number(obj.number) > 0 && func == false) {
+  } else if (obj.previous != obj.user && Number(obj.number) > 0) {
     // update credits & name
     empty(obj.previous);
   }

@@ -4,7 +4,10 @@ const jsonDAL = require("../DAL/jsonDAL");
 exports.search = async function (obj) {
   const movie = await jsonDAL.getMovies();
   const rest = await restDAL.getMovies();
-  let id = [], id1, id2, id3;
+  let id = [],
+    id1,
+    id2,
+    id3;
 
   // 7 cases of search
 
