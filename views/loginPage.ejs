@@ -1,51 +1,33 @@
 <html>
+  <head>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <title>Login</title> 
+  </head>
 
-    <head>
-        <link rel="stylesheet" href="/stylesheets/style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=0.75">
-        <title>Login</title> 
-    </head>
+  <body>
+    <h1>Login Page</h1><br>
+    <div class="box"><br>
+      <form action="/menu" method="POST">
+        <input placeholder="Enter User Name" type="text" name="user"><br/><br/>
+        <input placeholder="Enter Password" type="password" name="psw"><br/><br/>
+        <input type="submit" value="Login" style="cursor: pointer;"><br/><br/>
+      </form>
+    </div><br>
+    <h2> Login Instructions: </h2>
+    <big>
+      UserName - Admin <br>
+      Password - a <br><br>
+      You can do whatever you want including add/edit/delete users.<br/><br/>
+      **If you want to get limited access, you must create another user by adding new one in edit users page,<br/>
+      then logout and log in to the site with the user you created.<br/> 
+    </big>
 
-    <body>
-     
-        <h1>Login Page</h1><br>  
-
-        <div class="box"><br>
-
-            <form action="/menu" method="POST">
-                    
-                <input placeholder="Enter User Name" type="text" name="user"><br/><br/>
-                <input placeholder="Enter Password" type="password" name="psw"><br/><br/>
-                <input type="submit" value="Login" style="cursor: pointer;"><br/><br/>
-            
-            </form>
-
-        </div><br>
-
-        <h2> Login Instructions: </h2> 
-
-        <big>
-            
-            UserName - Admin <br>
-            Password - a <br><br>
-           
-            You can do whatever you want including add/edit/delete users.<br/><br/>
-
-            **If you want to get limited access, you must create another user by adding new one in edit users page,<br/>
-            then logout and log in to the site with the user you created.<br/>
-            
-        </big>
-
-        <!-- if there's error or message -->
-        <% if(msg!=undefined) { %>
-
-            <script>
-
-                alert("<%= msg %>")
-
-            </script>
-                
-        <% } %> 
-
-    </body>
+    <!-- if there's error or message -->
+    <% if(msg!=undefined) { %>
+      <script>
+        alert("<%= msg %>")
+      </script>
+    <% } %>
+  </body>
 </html>

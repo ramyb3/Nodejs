@@ -1,93 +1,72 @@
 <html>
+  <head>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <title>Search Results</title>
+  </head>
+  
+  <body>
+    <h1>Search Results Page</h1><br>
 
-    <head>
-        <link rel="stylesheet" href="/stylesheets/style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=0.75">
-        <title>Search Results</title>
-    </head>
-    
-    <body>
+    <!-- if there isn't results to search -->
+    <% if(movies.length==0) { %>
+      <h2> There isn't results to your search!!</h2><br>
+    <% } %>  
 
-        <h1>Search Results Page</h1><br>
+    <!-- if there's results to search -->
+    <% if(movies.length!=0) { %>
+      <table style="margin: auto; font-size: 20px; text-align: center;" border="1">
+        <!-- categories in table -->
+        <tr>
+          <th style="width: 300px;"> Movies </th>
+          <th style="width: 400px;"> Movies In The Same Genre </th> 
+        </tr> 
 
-        <!-- if there isn't results to search -->
-        <% if(movies.length==0) { %>
-
-            <h2> There isn't results to your search!!</h2><br>
-
-        <% } %>  
-
-        <!-- if there's results to search -->
-        <% if(movies.length!=0) { %>
-            
-            <table style="margin: auto; font-size: 20px; text-align: center;" border="1">
-
-                <!-- categories in table -->
-                <tr>
-                    <th style="width: 300px;"> Movies </th>
-                    <th style="width: 400px;"> Movies In The Same Genre </th> 
-                </tr> 
-
-                <!-- all the search results -->
-                <% movies.forEach(function(result) { %>
-                <tr> 
-                
-                    <!-- name of the movie -->
-                    <td><a href="/menu/search/results/movie/<%= result.id %>" ><%= result.name %></a></td>
-                  
-                    <!-- loop for genre search that equal to the movie -->
-                    <% for(var i=0; i < genre.length; i++) { %> 
-
-                        <!-- check equality between movie and genre -->
-                        <% if(result.id==genre[i].id) { %>
-
-                            <!-- only if there's another movie with the same genre -->
-                            <% if(genre[i].data!="There isn't another movie with the same genre!") { %>
-                            <td> 
-                             
-                                <!-- if there's more than one movie with the same genre -->
-                                <% if(genre[i].data.length>1) { %>
-                                <ul>  
-                               
-                                    <% for(var j=0; j < genre[i].data.length; j++) { %> 
-                                    <li>
-
-                                        <!-- list of names of the movies with the same genre -->
-                                        <a href="/menu/search/results/movie/<%= genre[i].data[j].id%>" ><%= genre[i].data[j].name %></a> 
-                                
-                                    </li> 
-                                    <% } %>
-
-                                </ul>
-                                <% } %>
-
-                                <!-- if there's only one movie with the same genre -->
-                                <% if(genre[i].data.length==1) { %>
-
-                                    <!-- name of the movie with the same genre -->
-                                    <a href="/menu/search/results/movie/<%= genre[i].data[0].id%>" ><%= genre[i].data[0].name %></a> 
-                            
-                                <% } %>
-                            
-                            </td>
-                            <% } %>
-
-                            <!-- only if there isn't another movie with the same genre -->
-                            <% if(genre[i].data=="There isn't another movie with the same genre!") { %>
-                            
-                                <!-- without hyperlinks -->
-                                <td><%= genre[i].data %></td>
-                            
-                            <% } %>
-                        
+        <!-- all the search results -->
+        <% movies.forEach(function(result) { %>
+          <tr> 
+            <!-- name of the movie -->
+            <td><a href="/menu/search/results/movie/<%= result.id %>" ><%= result.name %></a></td>
+          
+            <!-- loop for genre search that equal to the movie -->
+            <% for(var i=0; i < genre.length; i++) { %> 
+              <!-- check equality between movie and genre -->
+              <% if(result.id==genre[i].id) { %>
+                <!-- only if there's another movie with the same genre -->
+                <% if(genre[i].data!="There isn't another movie with the same genre!") { %>
+                  <td>
+                    <!-- if there's more than one movie with the same genre -->
+                    <% if(genre[i].data.length>1) { %>
+                      <ul>
+                        <% for(var j=0; j < genre[i].data.length; j++) { %> 
+                          <li>
+                            <!-- list of names of the movies with the same genre -->
+                            <a href="/menu/search/results/movie/<%= genre[i].data[j].id%>" ><%= genre[i].data[j].name %></a> 
+                          </li> 
                         <% } %>
-                    <% } %> 
-                </tr>
-                <% }) %> 
-            </table> <br><br>
-        <% } %>          
+                      </ul>
+                    <% } %>
 
-        <a href="/menu"> Back to Menu Page</a>
+                    <!-- if there's only one movie with the same genre -->
+                    <% if(genre[i].data.length==1) { %>
+                      <!-- name of the movie with the same genre -->
+                      <a href="/menu/search/results/movie/<%= genre[i].data[0].id%>" ><%= genre[i].data[0].name %></a>
+                    <% } %>
+                  </td>
+                <% } %>
 
-    </body>
+                <!-- only if there isn't another movie with the same genre -->
+                <% if(genre[i].data=="There isn't another movie with the same genre!") { %>
+                  <!-- without hyperlinks -->
+                  <td><%= genre[i].data %></td>
+                <% } %>
+              <% } %>
+            <% } %> 
+          </tr>
+        <% }) %> 
+      </table> <br><br>
+    <% } %>          
+
+    <a href="/menu"> Back to Menu Page</a>
+  </body>
 </html>
