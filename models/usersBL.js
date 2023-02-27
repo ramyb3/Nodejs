@@ -1,21 +1,16 @@
 const jsonDAL = require("../DAL/jsonDAL");
-
-// get all users from Users file
-const users = async function () {
-  const data = await jsonDAL.read("Users");
-  return data.users;
-};
+const usersDAL = require("../DAL/usersDAL");
 
 // get user from Users file
 const checkUser = async function (obj) {
-  let data = await users();
+  let data = await usersDAL.users();
   data = data.find((user) => user.Username == obj);
   return data;
 };
 
 // add user to Users file
 const addUser = async function (obj) {
-  const data = await users();
+  const data = await usersDAL.users();
 
   const user = {
     Username: obj.user,
@@ -30,7 +25,7 @@ const addUser = async function (obj) {
 
 // delete user from Users file
 const deleteUser = async function (obj) {
-  const usersArr = await users();
+  const usersArr = await usersDAL.users();
   const data = usersArr.find((user) => user.Username == obj);
   const users = usersArr.filter((user) => user.Username != data.Username);
   await jsonDAL.write({ users }, "Users");
@@ -38,18 +33,18 @@ const deleteUser = async function (obj) {
 
 // get user's credits from Users file
 const credits = async function (obj) {
-  const users = await users();
+  const users = await usersDAL.users();
   const name = users.find((user) => user.Username == obj);
   return name.NumOfTransactions;
 };
 
 // save/update user to Users file
 const updateUser = async function (obj, method) {
-  let usersArr = await jsonDAL.read("Users");
-  const data = usersArr.users.find(
+  let users = await usersDAL.users();
+  const data = users.find(
     (user) => user.Username == obj[method ? "Username" : "previous"]
   );
-  const users = usersArr.users.filter((user) => user.Username != data.Username);
+  users = users.filter((user) => user.Username != data.Username);
 
   const user = {
     Username: obj[method ? "Username" : "user"],
@@ -58,13 +53,11 @@ const updateUser = async function (obj, method) {
     NumOfTransactions: obj[method ? "NumOfTransactions" : "number"],
   };
 
-  usersArr = { users };
-  usersArr.users.push(user);
-  await jsonDAL.write(usersArr, "Users");
+  users.push(user);
+  await jsonDAL.write(users, "Users");
 };
 
 module.exports = {
-  users,
   checkUser,
   addUser,
   deleteUser,

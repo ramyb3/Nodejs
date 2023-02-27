@@ -4,7 +4,7 @@ exports.login = async function (obj) {
   let data = await jsonDAL.read("Users");
 
   //get user
-  data = data.users.find(
+  data = data.find(
     (user) => user.Username == obj.user && user.Password == obj.psw
   );
 

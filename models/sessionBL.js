@@ -65,7 +65,7 @@ const update = async function (obj) {
       data = session.find((user) => user.name == obj.previous);
 
       if (data) {
-        let array = session.filter((user) => user.name != data.name);
+        const array = session.filter((user) => user.name != data.name);
         data.name = obj.user;
         array.push(data);
 

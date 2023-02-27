@@ -10,6 +10,41 @@ const sessionBL = require("../models/sessionBL");
 const timeBL = require("../models/timeBL");
 const restDAL = require("../DAL/restDAL");
 const jsonDAL = require("../DAL/jsonDAL");
+const usersDAL = require("../DAL/usersDAL");
+
+function adminMessage(authenticated) {
+  if (authenticated) {
+    return "YOU ARE NOT ADMIN!!";
+  } else {
+    return "LOG IN FIRST!!";
+  }
+}
+
+function creditMessage(credits) {
+  let msg = "LOG IN FIRST!!";
+
+  if (credits == 0) {
+    msg = "YOU ARE OUT OF CREDITS!!";
+  }
+
+  return msg;
+}
+
+function searchMessage(authenticated, credits) {
+  let msg = "";
+
+  if (authenticated) {
+    msg = "SERACH SOMETHING FIRST!!";
+  } else {
+    msg = "LOG IN FIRST!!";
+  }
+
+  if (credits == 0) {
+    msg = "YOU ARE OUT OF CREDITS!!";
+  }
+
+  return msg;
+}
 
 /////////////////////////////////////////////////////////////
 
@@ -113,12 +148,7 @@ router.get("/menu", function (req, res, next) {
   ) {
     res.render("menuPage", { login: req.session.admin });
   } else {
-    req.session.msg = "LOG IN FIRST!!";
-
-    if (req.session.credits == 0) {
-      req.session.msg = "YOU ARE OUT OF CREDITS!!";
-    }
-
+    req.session.msg = creditMessage(req.session.credits);
     res.redirect("/");
   }
 });
@@ -129,15 +159,10 @@ router.get("/menu", function (req, res, next) {
 router.get("/menu/edit", async function (req, res, next) {
   // check if session started
   if (req.session.authenticated && req.session.admin) {
-    const users = await usersBL.users();
+    const users = await usersDAL.users();
     res.render("editUsers", { users });
   } else {
-    if (req.session.authenticated) {
-      req.session.msg = "YOU ARE NOT ADMIN!!";
-    } else {
-      req.session.msg = "LOG IN FIRST!!";
-    }
-
+    req.session.msg = adminMessage(req.session.authenticated);
     res.redirect("/");
   }
 });
@@ -148,12 +173,7 @@ router.get("/menu/edit/userData/add", function (req, res, next) {
   if (req.session.authenticated && req.session.admin) {
     res.render("userData", { option: 1 });
   } else {
-    if (req.session.authenticated) {
-      req.session.msg = "YOU ARE NOT ADMIN!!";
-    } else {
-      req.session.msg = "LOG IN FIRST!!";
-    }
-
+    req.session.msg = adminMessage(req.session.authenticated);
     res.redirect("/");
   }
 });
@@ -165,12 +185,7 @@ router.get("/menu/edit/userData/update/:name", async function (req, res, next) {
     const user = await usersBL.checkUser(req.params.name);
     res.render("userData", { option: 2, data: user });
   } else {
-    if (req.session.authenticated) {
-      req.session.msg = "YOU ARE NOT ADMIN!!";
-    } else {
-      req.session.msg = "LOG IN FIRST!!";
-    }
-
+    req.session.msg = adminMessage(req.session.authenticated);
     res.redirect("/");
   }
 });
@@ -183,12 +198,7 @@ router.get("/menu/edit/userData/delete/:name", async function (req, res, next) {
     await sessionBL.empty(req.params.name); // delete user from session file
     res.redirect("/menu");
   } else {
-    if (req.session.authenticated) {
-      req.session.msg = "YOU ARE NOT ADMIN!!";
-    } else {
-      req.session.msg = "LOG IN FIRST!!";
-    }
-
+    req.session.msg = adminMessage(req.session.authenticated);
     res.redirect("/");
   }
 });
@@ -197,14 +207,13 @@ router.get("/menu/edit/userData/delete/:name", async function (req, res, next) {
 router.post("/menu/edit/userData", async function (req, res, next) {
   // check if session started
   if (req.session.authenticated && req.session.admin) {
-    // update
     if (req.body.do == 2) {
+      // update
       await usersBL.updateUser(req.body, false);
       await sessionBL.update(req.body); // update user in session file
     }
-
-    // add
     if (req.body.do == 1) {
+      // add
       await usersBL.addUser(req.body);
     }
 
@@ -225,18 +234,13 @@ router.get("/menu/search", function (req, res, next) {
   ) {
     res.render("search", {});
   } else {
-    req.session.msg = "LOG IN FIRST!!";
-
-    if (req.session.credits == 0) {
-      req.session.msg = "YOU ARE OUT OF CREDITS!!";
-    }
-
+    req.session.msg = creditMessage(req.session.credits);
     res.redirect("/");
   }
 });
 
 let jsonMovie, restMovie; // getting movies from all sources
-let data, result, names;
+let result, names;
 
 // serach results page
 router.post("/menu/search/results", async function (req, res, next) {
@@ -245,16 +249,14 @@ router.post("/menu/search/results", async function (req, res, next) {
     req.session.authenticated &&
     (req.session.credits > 0 || req.session.admin)
   ) {
-    data = await searchBL.search(req.body);
+    const data = await searchBL.search(req.body);
 
-    // if there isn't results to the search
     if (data.length == 0) {
+      // if there isn't results to the search
       result = [];
       result[0] = [];
-    }
-
-    // if there's results to the search
-    if (data.length > 0) {
+    } else {
+      // if there's results to the search
       jsonMovie = await jsonDAL.read("NewMovies");
       restMovie = await restDAL.getMovies();
       result = await resultsBL.result(data);
@@ -280,16 +282,10 @@ router.get("/menu/search/results", function (req, res, next) {
   ) {
     res.render("searchResults", { movies: result[0], genre: names });
   } else {
-    if (req.session.authenticated) {
-      req.session.msg = "SERACH SOMETHING FIRST!!";
-    } else {
-      req.session.msg = "LOG IN FIRST!!";
-    }
-
-    if (req.session.credits == 0) {
-      req.session.msg = "YOU ARE OUT OF CREDITS!!";
-    }
-
+    req.session.msg = searchMessage(
+      req.session.authenticated,
+      req.session.credits
+    );
     res.redirect("/");
   }
 });
@@ -306,13 +302,11 @@ router.get("/menu/search/results/movie/:id", function (req, res, next) {
     let image = "";
     let movie;
 
-    //file NewMovies start with id-21
     if (id > 20) {
+      //file NewMovies start with id-21
       movie = jsonMovie.movies.find((movieData) => movieData.id == id);
-    }
-
-    //REST API ends with id-20
-    if (id < 21) {
+    } else {
+      //REST API ends with id-20
       movie = restMovie.find((movieData) => movieData.id == id);
     }
 
@@ -325,16 +319,10 @@ router.get("/menu/search/results/movie/:id", function (req, res, next) {
 
     res.render("movieData", { movie, image });
   } else {
-    if (req.session.authenticated) {
-      req.session.msg = "SERACH SOMETHING FIRST!!";
-    } else {
-      req.session.msg = "LOG IN FIRST!!";
-    }
-
-    if (req.session.credits == 0) {
-      req.session.msg = "YOU ARE OUT OF CREDITS!!";
-    }
-
+    req.session.msg = searchMessage(
+      req.session.authenticated,
+      req.session.credits
+    );
     res.redirect("/");
   }
 });
@@ -364,12 +352,7 @@ router.get("/menu/createMovie", function (req, res, next) {
   ) {
     res.render("createMovies", {});
   } else {
-    req.session.msg = "LOG IN FIRST!!";
-
-    if (req.session.credits == 0) {
-      req.session.msg = "YOU ARE OUT OF CREDITS!!";
-    }
-
+    req.session.msg = creditMessage(req.session.credits);
     res.redirect("/");
   }
 });
