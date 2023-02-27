@@ -10,67 +10,73 @@ exports.genre = async function (obj, data) {
     id = [];
   let movieGenre = 0; // min length of NewMovies file
 
-  // check if file NewMovies not empty
-  if (movie.length != 0) {
-    movieGenre = movie.movies.map((movieData) => movieData.genres);
-  }
-
-  for (let k = 0; k < obj.length; k++) {
+  const moreThanOneGenre = (method, array, object) => {
     let check = false; //checks if the genre exist in the movie data
     const arr = [];
 
-    // if there is more than one genre
-    if (Array.isArray(obj[k])) {
-      for (let j = 0; j < restGenre.length; j++) {
-        for (let i = 0; i < obj[k].length; i++) {
-          check = restGenre[j].includes(obj[k][i]);
+    for (let j = 0; j < array.length; j++) {
+      for (let i = 0; i < object.length; i++) {
+        check = array[j].includes(object[i]);
 
-          if (!check) {
-            break;
-          }
-
-          //because there isn't 17th movie, I improvised a bit
-          if (i == obj[k].length - 1 && check) {
+        if (!check) {
+          break;
+        }
+        if (i == object.length - 1 && check) {
+          if (method) {
+            //because there isn't 17th movie, I improvised a bit
             arr.push(j + (j < 16 ? 1 : 2));
-          }
-        }
-      }
-
-      // check if file NewMovies not empty
-      if (movie.length != 0) {
-        for (let j = 0; j < movieGenre.length; j++) {
-          for (i = 0; i < obj[k].length; i++) {
-            check = movieGenre[j].includes(obj[k][i]);
-
-            if (!check) {
-              break;
-            }
-            if (i == obj[k].length - 1 && check) {
-              arr.push(j + 21); // file NewMovies start with id-21
-            }
-          }
-        }
-      }
-    } else {
-      //if there is only one genre
-      for (let i = 0; i < restGenre.length; i++) {
-        //because there isn't 17th movie, I improvised a bit
-        if (restGenre[i].includes(obj[k])) {
-          arr.push(i + (i < 16 ? 1 : 2));
-        }
-      }
-
-      // check if file NewMovies not empty
-      if (movie.length != 0) {
-        for (let i = 0; i < movieGenre.length; i++) {
-          if (movieGenre[i].includes(obj[k])) {
-            arr.push(i + 21); // file NewMovies start with id-21
+          } else {
+            arr.push(j + 21); // file NewMovies start with id-21
           }
         }
       }
     }
 
-    id.push(arr);
+    return arr;
+  };
+
+  const oneGenre = (method, array, object) => {
+    const arr = [];
+
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].includes(object)) {
+        if (method) {
+          //because there isn't 17th movie, I improvised a bit
+          arr.push(i + (i < 16 ? 1 : 2));
+        } else {
+          arr.push(i + 21); // file NewMovies start with id-21
+        }
+      }
+    }
+
+    return arr;
+  };
+
+  // check if file NewMovies not empty
+  if (movie.length != 0) {
+    movieGenre = movie.movies.map((movieData) => movieData.genres);
+  }
+
+  for (let i = 0; i < obj.length; i++) {
+    const arr = [];
+
+    if (Array.isArray(obj[i])) {
+      arr.push(moreThanOneGenre(true, restGenre, obj[i]));
+
+      // check if file NewMovies not empty
+      if (movie.length != 0) {
+        arr.push(moreThanOneGenre(false, movieGenre, obj[i]));
+      }
+    } else {
+      arr.push(oneGenre(true, restGenre, obj[i]));
+
+      // check if file NewMovies not empty
+      if (movie.length != 0) {
+        arr.push(oneGenre(false, movieGenre, obj[i]));
+      }
+    }
+
+    id.push(arr.flat(2));
   }
 
   for (let i = 0; i < id.length; i++) {
