@@ -1,4 +1,4 @@
-const restDAL = require("../DAL/restDAL");
+const moviesDAL = require("../DAL/moviesDAL");
 const jsonDAL = require("../DAL/jsonDAL");
 
 exports.movies = async function (obj) {
@@ -7,7 +7,7 @@ exports.movies = async function (obj) {
 
   // in the beginning of the project need to write "[]" in NewMovies file
   if (movie.length == 0) {
-    const rest = await restDAL.getMovies();
+    const rest = await moviesDAL.getMovies();
     id = rest.length + 2; // there isn't 17th movie - so I skipped this movie for good coding
   } else {
     const lastMovieId = movie.movies[movie.movies.length - 1].id;

@@ -1,9 +1,9 @@
-const restDAL = require("../DAL/restDAL");
+const moviesDAL = require("../DAL/moviesDAL");
 const jsonDAL = require("../DAL/jsonDAL");
 
 exports.search = async function (obj) {
   const movie = await jsonDAL.read("NewMovies");
-  const rest = await restDAL.getMovies();
+  const rest = await moviesDAL.getMovies();
   const arr1 = name(movie, rest, obj);
   const arr2 = language(movie, rest, obj);
   const arr3 = genre(movie, rest, obj);
@@ -37,27 +37,15 @@ function name(movie, rest, obj) {
   let arr = rest.map((data) => data.name);
   rest = [];
 
-  for (let i = 0; i < arr.length; i++) {
-    //check all letters
-    if (arr[i].toLowerCase().includes(obj.name.toLowerCase())) {
-      //because there isn't 17th movie, I improvised a bit
-      rest.push(i + (i < 16 ? 1 : 2));
-    }
-  }
+  rest.push(checkLetters(true, arr, obj));
 
   // check if file NewMovies not empty
   if (movie.length != 0) {
     arr = movie.movies.map((data) => data.name);
-
-    for (let i = 0; i < arr.length; i++) {
-      //check all letters
-      if (arr[i].toLowerCase().includes(obj.name.toLowerCase())) {
-        rest.push(i + 21); // file NewMovies start with id-21
-      }
-    }
+    rest.push(checkLetters(false, arr, obj));
   }
 
-  return rest;
+  return rest.flat(2);
 }
 
 function language(movie, rest, obj) {
@@ -84,59 +72,39 @@ function genre(movie, rest, obj) {
     movieGenre = movie.movies.map((data) => data.genres);
   }
 
-  // if there is more than one genre
   if (Array.isArray(obj.genres)) {
-    let check = false; //checks if the genre exist in the movie data
-
-    for (let j = 0; j < restGenre.length; j++) {
-      for (let i = 0; i < obj.genres.length; i++) {
-        check = restGenre[j].includes(obj.genres[i]);
-
-        if (!check) {
-          break;
-        }
-
-        if (i == obj.genres.length - 1 && check) {
-          //because there isn't 17th movie, I improvised a bit
-          rest.push(j + (j < 16 ? 1 : 2));
-        }
-      }
-    }
+    rest.push(moviesDAL.moreThanOneGenre(true, restGenre, obj.genres));
 
     // check if file NewMovies not empty
     if (movie.length != 0) {
-      for (let j = 0; j < movieGenre.length; j++) {
-        for (let i = 0; i < obj.genres.length; i++) {
-          check = movieGenre[j].includes(obj.genres[i]);
-
-          if (!check) {
-            break;
-          }
-
-          if (i == obj.genres.length - 1 && check) {
-            rest.push(j + 21); // file NewMovies start with id-21
-          }
-        }
-      }
+      rest.push(moviesDAL.moreThanOneGenre(false, movieGenre, obj.genres));
     }
   } else {
-    //if there is only one genre
-    for (let i = 0; i < restGenre.length; i++) {
-      if (restGenre[i].includes(obj.genres)) {
-        //because there isn't 17th movie, I improvised a bit
-        rest.push(i + (i < 16 ? 1 : 2));
-      }
-    }
+    rest.push(moviesDAL.oneGenre(true, restGenre, obj.genres));
 
     // check if file NewMovies not empty
     if (movie.length != 0) {
-      for (let i = 0; i < movieGenre.length; i++) {
-        if (movieGenre[i].includes(obj.genres)) {
-          rest.push(i + 21); // file NewMovies start with id-21
-        }
+      rest.push(moviesDAL.oneGenre(false, movieGenre, obj.genres));
+    }
+  }
+
+  return rest.flat(2);
+}
+
+function checkLetters(method, arr, obj) {
+  const array = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    //check all letters
+    if (arr[i].toLowerCase().includes(obj.name.toLowerCase())) {
+      if (method) {
+        //because there isn't 17th movie, I improvised a bit
+        array.push(i + (i < 16 ? 1 : 2));
+      } else {
+        array.push(i + 21); // file NewMovies start with id-21
       }
     }
   }
 
-  return rest;
+  return array;
 }

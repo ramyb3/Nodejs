@@ -8,7 +8,7 @@ const genresBL = require("../models/genresBL");
 const usersBL = require("../models/usersBL");
 const sessionBL = require("../models/sessionBL");
 const timeBL = require("../models/timeBL");
-const restDAL = require("../DAL/restDAL");
+const moviesDAL = require("../DAL/moviesDAL");
 const jsonDAL = require("../DAL/jsonDAL");
 const usersDAL = require("../DAL/usersDAL");
 
@@ -258,7 +258,7 @@ router.post("/menu/search/results", async function (req, res, next) {
     } else {
       // if there's results to the search
       jsonMovie = await jsonDAL.read("NewMovies");
-      restMovie = await restDAL.getMovies();
+      restMovie = await moviesDAL.getMovies();
       result = await resultsBL.result(data);
       names = await genresBL.genre(result[1], result[0]);
       req.session.search = true;

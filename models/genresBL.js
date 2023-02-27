@@ -1,56 +1,14 @@
-const restDAL = require("../DAL/restDAL");
+const moviesDAL = require("../DAL/moviesDAL");
 const jsonDAL = require("../DAL/jsonDAL");
 
 exports.genre = async function (obj, data) {
   const movie = await jsonDAL.read("NewMovies");
-  const rest = await restDAL.getMovies();
+  const rest = await moviesDAL.getMovies();
   const restGenre = rest.map((movieData) => movieData.genres);
   const dataId = data.map((movieData) => movieData.id);
   const names = [],
     id = [];
   let movieGenre = 0; // min length of NewMovies file
-
-  const moreThanOneGenre = (method, array, object) => {
-    let check = false; //checks if the genre exist in the movie data
-    const arr = [];
-
-    for (let j = 0; j < array.length; j++) {
-      for (let i = 0; i < object.length; i++) {
-        check = array[j].includes(object[i]);
-
-        if (!check) {
-          break;
-        }
-        if (i == object.length - 1 && check) {
-          if (method) {
-            //because there isn't 17th movie, I improvised a bit
-            arr.push(j + (j < 16 ? 1 : 2));
-          } else {
-            arr.push(j + 21); // file NewMovies start with id-21
-          }
-        }
-      }
-    }
-
-    return arr;
-  };
-
-  const oneGenre = (method, array, object) => {
-    const arr = [];
-
-    for (let i = 0; i < array.length; i++) {
-      if (array[i].includes(object)) {
-        if (method) {
-          //because there isn't 17th movie, I improvised a bit
-          arr.push(i + (i < 16 ? 1 : 2));
-        } else {
-          arr.push(i + 21); // file NewMovies start with id-21
-        }
-      }
-    }
-
-    return arr;
-  };
 
   // check if file NewMovies not empty
   if (movie.length != 0) {
@@ -61,18 +19,18 @@ exports.genre = async function (obj, data) {
     const arr = [];
 
     if (Array.isArray(obj[i])) {
-      arr.push(moreThanOneGenre(true, restGenre, obj[i]));
+      arr.push(moviesDAL.moreThanOneGenre(true, restGenre, obj[i]));
 
       // check if file NewMovies not empty
       if (movie.length != 0) {
-        arr.push(moreThanOneGenre(false, movieGenre, obj[i]));
+        arr.push(moviesDAL.moreThanOneGenre(false, movieGenre, obj[i]));
       }
     } else {
-      arr.push(oneGenre(true, restGenre, obj[i]));
+      arr.push(moviesDAL.oneGenre(true, restGenre, obj[i]));
 
       // check if file NewMovies not empty
       if (movie.length != 0) {
-        arr.push(oneGenre(false, movieGenre, obj[i]));
+        arr.push(moviesDAL.oneGenre(false, movieGenre, obj[i]));
       }
     }
 
