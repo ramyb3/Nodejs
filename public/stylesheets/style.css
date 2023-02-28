@@ -7,8 +7,17 @@ button {
   cursor: pointer;
 }
 
+select {
+  width: max-content;
+  text-align: center;
+}
+
 h1 {
   color: #999999;
+}
+
+td {
+  padding: 5px;
 }
 
 .box {
@@ -24,7 +33,7 @@ h1 {
   padding-bottom: 30px;
 }
 
-.select {
-  width: 50%;
-  text-align: center;
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }

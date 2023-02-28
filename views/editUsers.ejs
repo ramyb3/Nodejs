@@ -10,7 +10,7 @@
     <a href="/menu/edit/userData/add">Add New User</a>
 
     <% users.forEach(function(data) { %>
-      <div style="padding-bottom: 10px; padding-top: 10px; padding-left: 10px; display: flex; flex-direction: column;">● <%= data.Username %>
+      <div class="flex-column" style="padding-bottom: 10px; padding-top: 10px; padding-left: 10px;">● <%= data.Username %>
         <!-- you can't edit or delete admin details -->
         <% if(data.Username!="Admin") { %>
           <a href="/menu/edit/userData/update/<%=data.Username %>">Update User</a>
