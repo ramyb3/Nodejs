@@ -1,22 +1,20 @@
 <html>
   <head>
-      <link rel="stylesheet" href="/stylesheets/style.css">
-      <meta name="viewport" content="width=device-width, initial-scale=0.75">
-      <title>Menu</title>
-
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <title>Menu</title>
   </head>
   
   <body>
-    <h1>Menu Page</h1><br>
-
-    <big>
-      <a href="/menu/search"> Search Movies</a><br><br>
-      <a href="/menu/createMovie"> Create Movies</a><br><br>
+    <h1>Menu Page</h1>
+    <div style="display: flex; flex-direction: column; gap: 15px; font-size: 20px;">
+      <a href="/menu/search">Search Movies</a>
+      <a href="/menu/createMovie">Create Movies</a>
 
       <!-- if user is admin -->
-      <% if(login==true) { %>
-        <a href="/menu/edit"> Edit Users</a><br><br>
+      <% if(login) { %>
+        <a href="/menu/edit">Edit Users</a>
       <% } %>
-    </big>
+    </div>
   </body>
 </html>

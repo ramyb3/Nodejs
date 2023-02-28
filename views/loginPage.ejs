@@ -15,13 +15,14 @@
       </div>
     </form>
     <h2>Login Instructions:</h2>
-    <big>
-      UserName - Admin<br>
-      Password - a<br><br>
-      You can do whatever you want including add/edit/delete users.<br/><br/>
-      **If you want to get limited access, you must create another user by adding new one in edit users page,<br/>
-      then logout and log in to the site with the user you created.<br/> 
-    </big>
+    <div style="display: flex; flex-direction: column; font-size: 18px;">
+      <span>UserName - Admin</span>
+      <span style="padding-bottom: 10px;">Password - a</span>
+      <span style="padding-bottom: 10px;">You can do whatever you want including add/edit/delete users.</span>
+      <span>**If you want to get limited access,</span>
+      <span>you must create another user by adding new one in edit users page,</span>
+      <span>then logout and log in to the site with the user you created.</span>
+    </div>
 
     <!-- if there's error or message -->
     <% if(msg!=undefined) { %>

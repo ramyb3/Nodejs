@@ -1,23 +1,22 @@
 <html>
   <head>
-      <link rel="stylesheet" href="/stylesheets/style.css">
-      <meta name="viewport" content="width=device-width, initial-scale=0.75">
-      <title>Edit Users</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <title>Edit Users</title>
   </head>
   
   <body style="text-align: left;">
-    <h1 style="text-align: center;">Users Management Page</h1><br>
-    <a href="/menu/edit/userData/add"> Add New User</a>
-    <ul>
-      <% users.forEach(function(data) { %>
-        <li> <%= data.Username %> <br>
-          <!-- you can't edit or delete admin details -->
-            <% if(data.Username!="Admin") { %>
-            <a href="/menu/edit/userData/update/<%=data.Username %>" > Update User</a><br>
-            <a href="/menu/edit/userData/delete/<%=data.Username %>"> Delete User</a>
-          <% } %>
-        </li><br>
-      <% }) %>
-    </ul><br><br>
+    <h1 style="text-align: center;">Users Management Page</h1>
+    <a href="/menu/edit/userData/add">Add New User</a>
+
+    <% users.forEach(function(data) { %>
+      <div style="padding-bottom: 10px; padding-top: 10px; padding-left: 10px; display: flex; flex-direction: column;">● <%= data.Username %>
+        <!-- you can't edit or delete admin details -->
+        <% if(data.Username!="Admin") { %>
+          <a href="/menu/edit/userData/update/<%=data.Username %>">Update User</a>
+          <a href="/menu/edit/userData/delete/<%=data.Username %>">Delete User</a>
+        <% } %>
+      </div>
+    <% }) %>
   </body>
 </html>

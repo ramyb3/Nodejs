@@ -15,13 +15,13 @@ h1 {
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   border-color: #ffb3b3;
   border-style: groove;
   width: 400px;
   margin: auto;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 .select {

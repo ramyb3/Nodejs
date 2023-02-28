@@ -28,7 +28,7 @@ const deleteUser = async function (obj) {
   const usersArr = await usersDAL.users();
   const data = usersArr.find((user) => user.Username == obj);
   const users = usersArr.filter((user) => user.Username != data.Username);
-  await jsonDAL.write({ users }, "Users");
+  await jsonDAL.write(users, "Users");
 };
 
 // get user's credits from Users file
